@@ -65,7 +65,7 @@ function project(type: string, shop = true) {
 
 /** Run bash with the plugin's functions sourced and `ddev` replaced by a recorder. */
 function bash(script: string, env: Record<string, string> = {}) {
-  const r = spawnSync('bash', ['-c', `ddev() { echo "ddev $*" >> "\${DDEV_LOG:-/dev/null}" ; case "$*" in "wp user list"*) echo admin1 ;; "wp user get customer --field=ID") echo 7 ;; "wp option get stylesheet") echo twentytwentyfive ;; "wp post create"*) echo 42 ;; esac ; return 0 ; }\nsource ${FUNCTIONS}\n${script}`],
+  const r = spawnSync('bash', ['-c', `ddev() { echo "ddev $*" >> "\${DDEV_LOG:-/dev/null}" ; [ "$1 $2" = "wp eval" ] && echo "wp eval got $(( $# - 2 )) argument(s)" >> "\${DDEV_LOG:-/dev/null}" ; case "$*" in "wp user list"*) echo admin1 ;; "wp user get customer --field=ID") echo 7 ;; "wp option get stylesheet") echo twentytwentyfive ;; "wp post create"*) echo 42 ;; esac ; return 0 ; }\nsource ${FUNCTIONS}\n${script}`],
     { encoding: 'utf8', env: { ...process.env, ...env } });
   return r;
 }
@@ -102,7 +102,12 @@ test('the accounts are created with their roles, the customer gets its addresses
   for (const role of ['administrator', 'shop_manager', 'customer']) assert.match(written, new RegExp(`^ddev wp user set-role ${role} ${role}$`, 'm'));
   assert.match(written, /^ddev wp wc customer update 7 --user=admin1 --first_name=Casey --last_name=Customer --billing=\{"first_name":"Casey".*"city":"Los Angeles".*"email":"customer@example\.com"/m);
   assert.match(written, /--shipping=\{"first_name":"Casey".*"address_1":"2 Test Avenue"/);
-  assert.match(written, /^ddev wp eval .*"recipient"\] = \$args\[0\].* shop_manager@example\.com$/m);
+  // WP-CLI's eval takes one argument, the code; the shop manager's address is in it, as base64.
+  assert.match(written, /^ddev wp eval .*"recipient"\] = base64_decode\( "c2hvcF9tYW5hZ2VyQGV4YW1wbGUuY29t" \)/m);
+  assert.strictEqual(Buffer.from('c2hvcF9tYW5hZ2VyQGV4YW1wbGUuY29t', 'base64').toString(), 'shop_manager@example.com');
+  const evals = written.match(/^wp eval got \d+ argument\(s\)$/gm) || [];
+  assert.ok(evals.length >= 1, 'the order notifications are set with wp eval');
+  for (const line of evals) assert.strictEqual(line, 'wp eval got 1 argument(s)', 'wp eval takes the code and nothing else');
   fs.writeFileSync(log, '');
   r = bash('set_woocommerce_users ; cancel_woocommerce_users', env);
   assert.strictEqual(r.status, 0, r.stderr + r.stdout);
