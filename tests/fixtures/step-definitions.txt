@@ -1,0 +1,604 @@
+# @webship-js/woocommerce-steps 2.0.0, @webship-js/wordpress-steps 2.2.4 and webship-js 2.0.16
+^"([^"]*)" should be (visible|hidden|attached|focused|enabled|disabled|editable)(?: within (\d+) seconds?)?$
+^"([^"]*)" should be in the viewport(?: within (\d+) seconds?)?$
+^"([^"]*)" should contain text "([^"]*)"(?: within (\d+) seconds?)?$
+^"([^"]*)" should have a count of (\d+)(?: within (\d+) seconds?)?$
+^"([^"]*)" should have attribute "([^"]*)" with value "([^"]*)"(?: within (\d+) seconds?)?$
+^"([^"]*)" should have class "([^"]*)"(?: within (\d+) seconds?)?$
+^"([^"]*)" should have text "([^"]*)"(?: within (\d+) seconds?)?$
+^"([^"]*)" should have value "([^"]*)"(?: within (\d+) seconds?)?$
+^"([^"]*)" should not be (visible|hidden|attached|focused|enabled|disabled|editable)(?: within (\d+) seconds?)?$
+^"([^"]*)" should not be in the viewport(?: within (\d+) seconds?)?$
+^(?:(?:I am |we are )*on|(?:I |we )*go to) the "([^"]*)" admin screen$
+^(?:(?:I am |we are )*on|(?:I |we )*go to) the new (post|page) screen$
+^(?:(?:I am |we are )+on|(?:I |we )*go to) (?:my|our) "([^"]*)" account page$
+^(?:(?:I am |we are )+on|(?:I |we )*go to) the (shop|cart|checkout)$
+^(?:I am|we are) authenticating as "([^"]*)" with "([^"]*)" password$
+^(?:I set the header|we set the header|the header) "([^"]*)" (?:to|is) "([^"]*)"$
+^(?:I set the request body to|we set the request body to|the request body is) '([^']*)'$
+^(?:I |we )*print the full accessibility check$
+^(?:I |we )?send a ([A-Z]+) request to "([^"]+)" with body:$
+^(?:I |we )?send a ([A-Z]+) request to "([^"]+)" with form data:$
+^(?:I |we )?send a ([A-Z]+) request to "([^"]+)" with values:$
+^(?:I |we )?send a ([A-Z]+) request to "([^"]+)"$
+^(?:I |we )?set header "([^"]*)" with value "([^"]*)"$
+^(?:I|we) set placeholder "([^"]*)" to "([^"]*)"$
+^(?:I|we) set the following headers:$
+^(?:I|we) set the request body with:$
+^(?:my|our) (billing|shipping) address should( not)* contain "([^"]*)"$
+^(?:my|our) cart is empty$
+^(?:my|our) order history should( not)* list the last placed order(?: as "([^"]*)")?$
+^(?:the )?API response code should be (\d+)$
+^(?:the )?API response should contain "([^"]*)"$
+^(?:the )?API response should contain json:$
+^(?:the )?API response should not contain "([^"]*)"$
+^(?:the )?API response should( not)? contain the header "([^"]*)"$
+^(?:the )?local storage "((?:[^"\\]|\\.)*)" is removed$
+^(?:the )?local storage "((?:[^"\\]|\\.)*)" is set to "((?:[^"\\]|\\.)*)"$
+^(?:the )?robots\.txt(?: file)? should be served$
+^(?:the )?robots\.txt(?: file)? should( not)* disallow "([^"]*)"$
+^(?:the )?robots\.txt(?: file)? should( not)* list the sitemap$
+^(?:the )?session storage "((?:[^"\\]|\\.)*)" is removed$
+^(?:the )?session storage "((?:[^"\\]|\\.)*)" is set to "((?:[^"\\]|\\.)*)"$
+^(?:the API base URL is|I set the API base URL to|the base URL is) "([^"]*)"$
+^(?:the JSON response should have property|the API response should contain property) "([^"]*)"$
+^(?:the JSON response should have|the API response should have|the JSON property) "([^"]*)" (?:equal to|should be) (.+)$
+^(?:the JSON response should not have property|the API response should not contain property) "([^"]*)"$
+^(?:the cookie|cookie) "((?:[^"\\]|\\.)*)" is set to "((?:[^"\\]|\\.)*)"$
+^(?:the response header|the header) "([^"]*)" should (be|contain) "([^"]*)"$
+^(?:the response should be valid JSON|the API response should be valid JSON)$
+^(I am |we are )*a logged in user with( the)*( username)* "([^"]*)?"( user)*$
+^(I am |we are )*not logged in$
+^(I am |we are )*on a (?:blog )?post$
+^(I am |we are )*on a (?:category|taxonomy) archive$
+^(I am |we are )*on a (?:static )?page$
+^(I am |we are )*on the (?:lost|forgot|reset) password (?:page|screen)$
+^(I am |we are )*on the (?:sign[- ]?in|login) page$
+^(I am |we are )*on( the)* "([^"]*)?"( page)*$
+^(I am |we are )?an anonymous user$
+^(I am |we are )?on( the)* (homepage|frontpage)$
+^(I am |we are )?viewing the site on a (?:"([^"]+)"|([a-zA-Z0-9 _,]+)) (?:screen|device)$
+^(I go |I navigate |we go |we navigate |navigating )?to "([^"]*)?"$
+^(I go |I navigate |we go |we navigate |navigating )?to( the)* (homepage|frontpage)$
+^(I scroll|we scroll|scrolling)? down(?: (\d+))?$
+^(I scroll|we scroll|scrolling)? left(?: (\d+))?$
+^(I scroll|we scroll|scrolling)? right(?: (\d+))?$
+^(I scroll|we scroll|scrolling)? to bottom of "([^"]*)"$
+^(I scroll|we scroll|scrolling)? to end of "([^"]*)"$
+^(I scroll|we scroll|scrolling)? to start of "([^"]*)"$
+^(I scroll|we scroll|scrolling)? to top of "([^"]*)"$
+^(I scroll|we scroll|scrolling)? to( the)* bottom( of the page)*$
+^(I scroll|we scroll|scrolling)? to( the)* end( of the page)*$
+^(I scroll|we scroll|scrolling)? to( the)* start( of the page)*$
+^(I scroll|we scroll|scrolling)? to( the)* top( of the page)*$
+^(I scroll|we scroll|scrolling)? up(?: (\d+))?$
+^(I |we )*(?:log in|sign in) as "([^"]*)?" with password "([^"]*)?"$
+^(I |we )*(?:log in|sign in) as the "([^"]*)" user with password "([^"]*)?"$
+^(I |we )*(?:log|sign) out$
+^(I |we )*(activate|deactivate) the "([^"]*)" plugin$
+^(I |we )*(approve|unapprove|trash|spam|restore|delete) the comment "([^"]*)"(?: permanently)?$
+^(I |we )*(close|dismiss)( the)* modal( dialog)*$
+^(I |we )*(don't|do not) see ([a-zA-Z0-9 ,\-]+)$
+^(I |we )*accept all confirmation dialogs$
+^(I |we )*add "([^"]*)" selector for "([^"]*)" css selector$
+^(I |we )*add "([^"]*)" selector for "([^"]*)" xpath selector$
+^(I |we )*add "([^"]*)" to the cart from the product list$
+^(I |we )*add selectors from "([^"]*)" file$
+^(I |we )*add the (category|tag) "([^"]*)"$
+^(I |we )*add the order note "([^"]*)"$
+^(I |we )*add the product to the cart$
+^(I |we )*additionally select "([^"]*)" from "([^"]*)"$
+^(I |we )*advance the clock by (\d+) ?ms$
+^(I |we )*advance the clock by (\d+) minutes?$
+^(I |we )*advance the clock by (\d+) seconds?$
+^(I |we )*apply the coupon "([^"]*)"$
+^(I |we )*attach( the)* file "([^"]*)?" to "([^"]*)?"$
+^(I |we )*change (?:my|our) (billing|shipping) address:$
+^(I |we )*change the "([^"]*)" setting to "([^"]*)"$
+^(I |we )*change the cart quantity of "([^"]*)" to (\d+)$
+^(I |we )*change the order status to "([^"]*)"$
+^(I |we )*check "([^"]*)?"$
+^(I |we )*check the checkbox "([^"]*)"$
+^(I |we )*choose "([^"]*)" for the product option "([^"]*)"$
+^(I |we )*choose the "([^"]*)" payment method$
+^(I |we )*choose the "([^"]*)" permalink structure$
+^(I |we )*choose the "([^"]*)" shipping method$
+^(I |we )*choose the radio button "([^"]*)"$
+^(I |we )*clear the auth state$
+^(I |we )*clear the select "([^"]*)"$
+^(I |we )*click "([^"]*)" by attr inside the iframe$
+^(I |we )*click "([^"]*)" in the admin bar$
+^(I |we )*click "([^"]*)" in the admin menu$
+^(I |we )*click "([^"]*)" in the navigation menu$
+^(I |we )*click "([^"]*)" inside the iframe$
+^(I |we )*click "([^"]*)" under "([^"]*)" in the admin menu$
+^(I |we )*click "([^"]*)?" by( its)*(?: "([^"]*)?")* (attribute|attr)$
+^(I |we )*click "([^"]*)?" in( the)* "([^"]*)?" row$
+^(I |we )*click "([^"]*)?"$
+^(I |we )*click "([^"]*)?"( button)* in( the)* modal( dialog)*$
+^(I |we )*click (?:on |a )?([a-zA-Z0-9 ,\-]+)$
+^(I |we )*click on "([^"]*)" in the modal$
+^(I |we )*click on "([^"]*)" while holding "([^"]*)"$
+^(I |we )*click on the element "([^"]*)"$
+^(I |we )*click on the link with the title "([^"]*)"$
+^(I |we )*click the "([^"]*)" (button|link|tab|menuitem|checkbox|radio|option)$
+^(I |we )*define css selectors:$
+^(I |we )*define xpath selectors:$
+^(I |we )*delete the (category|tag) "([^"]*)"$
+^(I |we )*delete the (post|page) "([^"]*)" permanently$
+^(I |we )*delete the (product|coupon) "([^"]*)" permanently$
+^(I |we )*delete the last placed order$
+^(I |we )*delete the media file "([^"]*)" permanently$
+^(I |we )*delete the orders of "([^"]*)"$
+^(I |we )*do not accept any confirmation dialogs$
+^(I |we )*double[- ]click on "([^"]*)"$
+^(I |we )*download the file from the URL "([^"]*)"$
+^(I |we )*download the file from the link "([^"]*)"$
+^(I |we )*drag "([^"]*)" to "([^"]*)"$
+^(I |we )*file the post under the category "([^"]*)"$
+^(I |we )*fill in "([^"]*)" with "([^"]*)" inside the iframe$
+^(I |we )*fill in "([^"]*)?" for "([^"]*)?" by( its)*(?: "([^"]*)?")* (attribute|attr)$
+^(I |we )*fill in "([^"]*)?" for "([^"]*)?"$
+^(I |we )*fill in "([^"]*)?" with "([^"]*)?" by( its)*(?: "([^"]*)?")* (attribute|attr)$
+^(I |we )*fill in "([^"]*)?" with "([^"]*)?"$
+^(I |we )*fill in "([^"]*)?" with: by( its)*(?: "([^"]*)?")* (attribute|attr)$
+^(I |we )*fill in "([^"]*)?" with:$
+^(I |we )*fill in the (shipping|billing) address:$
+^(I |we )*fill in the WYSIWYG field "([^"]*)" with the "([^"]*)"$
+^(I |we )*fill in the checkout email with "([^"]*)"$
+^(I |we )*fill in the color field "([^"]*)" with the value "([^"]*)"$
+^(I |we )*fill in the date part of the datetime field "([^"]*)" with "([^"]*)"$
+^(I |we )*fill in the datetime field "([^"]*)" with date "([^"]*)" and time "([^"]*)"$
+^(I |we )*fill in the end datetime field "([^"]*)" with date "([^"]*)" and time "([^"]*)"$
+^(I |we )*fill in the field "([^"]*)" with "([^"]*)"$
+^(I |we )*fill in the multi-value field "([^"]*)" with the following values:$
+^(I |we )*fill in the start datetime field "([^"]*)" with date "([^"]*)" and time "([^"]*)"$
+^(I |we )*fill in the time part of the datetime field "([^"]*)" with "([^"]*)"$
+^(I |we )*fill in( the)* following: by( its)*(?: "([^"]*)?")* (attribute|attr)$
+^(I |we )*fill in( the)* following:$
+^(I |we )*focus on the element "([^"]*)"$
+^(I |we )*follow "([^"]*)"$
+^(I |we )*go back$
+^(I |we )*go to (?:the (next|previous) page|page (\d+)) of the product list$
+^(I |we )*hover over "([^"]*)"$
+^(I |we )*hover over the element "([^"]*)"$
+^(I |we )*log in to the store as "([^"]*)"(?: with the password "([^"]*)")?$
+^(I |we )*middle[- ]click on "([^"]*)"$
+^(I |we )*move backward one page$
+^(I |we )*move focus to "([^"]*)" field$
+^(I |we )*move forward one page$
+^(I |we )*move the (post|page) "([^"]*)" to the trash from the list$
+^(I |we )*move the (post|page) to the trash$
+^(I |we )*move the (product|coupon) "([^"]*)" to the trash$
+^(I |we )*move the pointer to "([^"]*)"$
+^(I |we )*open the "([^"]*)" product tab$
+^(I |we )*open the (?:navigation|mobile) menu$
+^(I |we )*open the (post|page) "([^"]*)" in the editor$
+^(I |we )*open the (product|coupon) "([^"]*)" in the admin$
+^(I |we )*open the category "([^"]*)"$
+^(I |we )*open the last placed order in (?:my|our) order history$
+^(I |we )*open the last placed order in the admin$
+^(I |we )*open the mini cart$
+^(I |we )*open the product "([^"]*)" from the product list$
+^(I |we )*pause the clock$
+^(I |we )*place the order$
+^(I |we )*press "([^"]*)?" by( its)*(?: "([^"]*)?")* (attribute|attr)$
+^(I |we )*press the key "([^"]*)" on the element "([^"]*)"$
+^(I |we )*press the key "([^"]*)"$
+^(I |we )*press the keys "([^"]*)" on the element "([^"]*)"$
+^(I |we )*press the keys "([^"]*)"$
+^(I |we )*press( the)* "([^"]*)?"( button)*$
+^(I |we )*print accessibility violations$
+^(I |we )*print css selectors$
+^(I |we )*print last XML response$
+^(I |we )*print last YAML response$
+^(I |we )*print xpath selectors$
+^(I |we )*publish the (post|page)$
+^(I |we )*reload( the)*( page)*$
+^(I |we )*remove "([^"]*)" from the cart$
+^(I |we )*remove the coupon "([^"]*)"$
+^(I |we )*request a password reset for the "([^"]*)" user$
+^(I |we )*restore the "([^"]*)" setting$
+^(I |we )*restore the (post|page) "([^"]*)" from the trash$
+^(I |we )*restore the auth state from "([^"]*)"$
+^(I |we )*restore the permalink structure$
+^(I |we )*resume the clock$
+^(I |we )*right[- ]click on "([^"]*)"$
+^(I |we )*save (\d+) x (\d+) screenshot$
+^(I |we )*save fullscreen (\d+) x (\d+) screenshot$
+^(I |we )*save fullscreen screenshot with name "([^"]*)"$
+^(I |we )*save fullscreen screenshot$
+^(I |we )*save screenshot with name "([^"]*)"$
+^(I |we )*save screenshot$
+^(I |we )*save the (?:settings|changes)$
+^(I |we )*save the (post|page) as a draft$
+^(I |we )*save the JSON property "([^"]*)" as placeholder "([^"]*)"$
+^(I |we )*save the auth state to "([^"]*)"$
+^(I |we )*save the current video as "([^"]*)"$
+^(I |we )*scroll to the element "([^"]*)"$
+^(I |we )*search (?:the site )?for "([^"]*)?"$
+^(I |we )*search (?:the site )?for (?:some )?existing content$
+^(I |we )*search the store for "([^"]*)"$
+^(I |we )*see ((?:[a-zA-Z0-9 ,\-](?!not))+) over ([a-zA-Z0-9 ,\-]+)$
+^(I |we )*see ([a-zA-Z0-9 ,\-]+) above ([a-zA-Z0-9 ,\-]+)$
+^(I |we )*see ([a-zA-Z0-9 ,\-]+) below ([a-zA-Z0-9 ,\-]+)$
+^(I |we )*see ([a-zA-Z0-9 ,\-]+) has focus$
+^(I |we )*see ([a-zA-Z0-9 ,\-]+) inside of ([a-zA-Z0-9 ,\-]+)$
+^(I |we )*see ([a-zA-Z0-9 ,\-]+) not over ([a-zA-Z0-9 ,\-]+)$
+^(I |we )*see ([a-zA-Z0-9 ,\-]+) outside of ([a-zA-Z0-9 ,\-]+)$
+^(I |we )*see ([a-zA-Z0-9 ,\-]+) to (?:the )?left of ([a-zA-Z0-9 ,\-]+)$
+^(I |we )*see ([a-zA-Z0-9 ,\-]+) to (?:the )?right of ([a-zA-Z0-9 ,\-]+)$
+^(I |we )*see visible ([a-zA-Z0-9 ,\-]+)$
+^(I |we )*select "([^"]*)" text in "([^"]*)" field$
+^(I |we )*select "([^"]*)?" from "([^"]*)?"$
+^(I |we )*select all text in "([^"]*)" field$
+^(I |we )*select from (\d+) to (\d+) text in "([^"]*)" field$
+^(I |we )*select radio button "([^"]*)?"$
+^(I |we )*send a REST "([^"]*)" request to "([^"]*)" with body:$
+^(I |we )*send a REST "([^"]*)" request to "([^"]*)"$
+^(I |we )*set the (post|page) title to "([^"]*)"$
+^(I |we )*set the product quantity to (\d+)$
+^(I |we )*set the system time to "([^"]*)"$
+^(I |we )*set the viewport height to (\d+)$
+^(I |we )*set the viewport size to (\d+)x(\d+)$
+^(I |we )*set the viewport to (\d+) by (\d+)$
+^(I |we )*set the viewport to the "([^"]*)" breakpoint$
+^(I |we )*set the viewport width to (\d+)$
+^(I |we )*should see (\d+) "([^"]*)" elements?$
+^(I |we )*should see no search results for (?:"([^"]*)?"|(?:that|the) content)$
+^(I |we )*should see search results for (?:"([^"]*)?"|(?:that|the) content)$
+^(I |we )*should see the order confirmation$
+^(I |we )*should( not)* be logged in(?: as the "([^"]*)" user)?$
+^(I |we )*should( not)* be on the "([^"]*)" admin screen$
+^(I |we )*should( not)* be on the (?:sign[- ]?in|login) page$
+^(I |we )*should( not)* be on( the)* "([^"]*)?"( page)*$
+^(I |we )*should( not)* be on( the)* (homepage|frontpage)$
+^(I |we )*should( not)* see "([^"]*)?" in( the)* "([^"]*)?" element by( its)*(?: "([^"]*)?")* (attribute|attr)$
+^(I |we )*should( not)* see "([^"]*)?" in( the)* "([^"]*)?" element$
+^(I |we )*should( not)* see "([^"]*)?" in( the)* "([^"]*)?" row$
+^(I |we )*should( not)* see "([^"]*)?" in( the)* modal( dialog)*$
+^(I |we )*should( not)* see "([^"]*)?"$
+^(I |we )*should( not)* see (?:any )?post entries$
+^(I |we )*should( not)* see (?:a|the) comments? form$
+^(I |we )*should( not)* see (?:a|the) search form$
+^(I |we )*should( not)* see (a |the )*"([^"]*)?" modal$
+^(I |we )*should( not)* see (a |the )*modal with title "([^"]*)?"$
+^(I |we )*should( not)* see (a |the )*modal( dialog)*$
+^(I |we )*should( not)* see (a|an) "([^"]*)?" element by( its)*(?: "([^"]*)?")* (attribute|attr)$
+^(I |we )*should( not)* see (a|an) "([^"]*)?" element$
+^(I |we )*should( not)* see an? (?:login |sign[- ]?in )?error(?: message)?(?: "([^"]*)")?$
+^(I |we )*should( not)* see an? (?:login|sign[- ]?in) message(?: "([^"]*)")?$
+^(I |we )*should( not)* see an? (success|error|warning|info) notice(?: "([^"]*)")?$
+^(I |we )*should( not)* see text matching "([^"]*)?" in( the)* "([^"]*)?" element$
+^(I |we )*should( not)* see text matching "([^"]*)?"$
+^(I |we )*should( not)* see the "([^"]*)" block$
+^(I |we )*should( not)* see the "([^"]*)" dashboard widget$
+^(I |we )*should( not)* see the (?:admin (?:bar|toolbar)|toolbar)$
+^(I |we )*should( not)* see the (?:post|page|content) title$
+^(I |we )*should( not)* see the (?:sign[- ]?in|login) form$
+^(I |we )*should( not)* see the (header|footer) template part$
+^(I |we )*should( not)* see the (success|error|warning|info) message "([^"]*)"$
+^(I |we )*should( not)* see the access denied screen$
+^(I |we )*should( not)* see the coming soon page$
+^(I |we )*should( not)* see the comment "([^"]*)"$
+^(I |we )*should( not)* see the editor notice "([^"]*)"$
+^(I |we )*should( not)* see the field error "([^"]*)"(?: for "([^"]*)")?$
+^(I |we )*should( not)* see the product "([^"]*)" in the product list$
+^(I |we )*should( not)* see the site title(?: "([^"]*)?")?$
+^(I |we )*sort the product list by "([^"]*)"$
+^(I |we )*start recording network requests$
+^(I |we )*start video recording$
+^(I |we )*stop video recording$
+^(I |we )*submit the (post|page) for review$
+^(I |we )*submit the comment "([^"]*)"(?: as "([^"]*)" with the email "([^"]*)")?$
+^(I |we )*switch to (the )?iframe "([^"]*)"$
+^(I |we )*switch to iframe with locator "([^"]*)"$
+^(I |we )*switch to the iframe with name "([^"]*)"$
+^(I |we )*switch to the iframe with title "([^"]*)"$
+^(I |we )*switch to the root document$
+^(I |we )*tag the post with "([^"]*)"$
+^(I |we )*tap on "([^"]*)"$
+^(I |we )*trigger the JS event "([^"]*)" on the element "([^"]*)"$
+^(I |we )*uncheck "([^"]*)?"$
+^(I |we )*uncheck the checkbox "([^"]*)"$
+^(I |we )*unselect "([^"]*)" from "([^"]*)"$
+^(I |we )*update the (post|page)$
+^(I |we )*upload the media file "([^"]*)"$
+^(I |we )*use the search form to search for "([^"]*)?"$
+^(I |we )*view the (post|page)$
+^(I |we )*wait (\d+)( minute| minutes|m)$
+^(I |we )*wait (\d+)( second| seconds|s)?$
+^(I |we )*wait for "([^"]*)" to appear$
+^(I |we )*wait for "([^"]*)" to disappear$
+^(I |we )*wait for (?:AJAX|ajax|Ajax) to finish$
+^(I |we )*wait for (\d+) seconds? for AJAX to finish$
+^(I |we )*wait for (\d+) seconds?$
+^(I |we )*wait for( the)* modal( dialog)* to (appear|disappear)$
+^(I |we )*wait for( the)* text "([^"]*)" to appear$
+^(I |we )*wait for( the)* text "([^"]*)" to disappear$
+^(I |we )*wait max of (\d+)( minute| minutes|m)$
+^(I |we )*wait max of (\d+)( second| seconds|s)?$
+^(I |we )*wait until (\d+) elements? match(?:es)? "([^"]*)"$
+^(I |we )*wait until (the network is idle|requests are complete|network goes quiet)$
+^(I |we )*wait until at least (\d+) elements? match(?:es)? "([^"]*)"$
+^(I |we )*wait until pending timers settle$
+^(I |we )*wait until( the)* URL contains "([^"]*)"$
+^(I |we )*wait until( the)* page is interactive$
+^(I |we )*wait until( the)* page title (is|contains) "([^"]*)"$
+^(I |we )*wait until( the)* page( is)* loaded*$
+^(I |we )*will accept the next dialog with "([^"]*)"$
+^(I |we )*will accept the next dialog$
+^(I |we )*will dismiss the next dialog$
+^(I |we )*write "([^"]*)" in the (post|page) content$
+^(the )*"([^"]*)?" checkbox is( not)* checked$
+^(the )*"([^"]*)?" checkbox should( not)* be checked$
+^(the )*"([^"]*)?" element should( not)* contain "([^"]*)?"$
+^(the )*"([^"]*)?" field should( not)* contain "([^"]*)?"$
+^(the )*"([^"]*)?" link should contain "([^"]*)?" by( its)*(?: "([^"]*)?")* (attribute|attr)$
+^(the )*"([^"]*)?" link should contain "([^"]*)?"$
+^(the )*"([^"]*)?" radio button is( not)* selected$
+^(the )*checkbox "([^"]*)?" is( not)* checked$
+^(the )*checkbox "([^"]*)?" should( not)* be checked$
+^(the )*radio button "([^"]*)?" should( not)* be selected$
+^(the )*radio button with value "([^"]*)?" should( not)* be selected$
+^(the )*response should( not)* contain "([^"]*)?"$
+^(the )*response status code should( not)* be (\d+)$
+^(the )*url should( not)* match "([^"]*)?"$
+^I should not see "([^"]*)" inside the iframe$
+^I should see "([^"]*)" inside the iframe$
+^JavaScript errors should not match "([^"]*)"$
+^a (GET|POST|PUT|PATCH|DELETE) request to "([^"]*)" should have been made$
+^a REST header "([^"]*)" with value "([^"]*)"$
+^a cookie with a name containing "([^"]*)" and a value containing "([^"]*)" should exist$
+^a cookie with a name containing "([^"]*)" and a value containing "([^"]*)" should not exist$
+^a cookie with a name containing "([^"]*)" and the value "([^"]*)" should exist$
+^a cookie with a name containing "([^"]*)" and the value "([^"]*)" should not exist$
+^a cookie with a name containing "([^"]*)" should exist$
+^a cookie with a name containing "([^"]*)" should not exist$
+^a cookie with the name "([^"]*)" and a value containing "([^"]*)" should exist$
+^a cookie with the name "([^"]*)" and a value containing "([^"]*)" should not exist$
+^a cookie with the name "([^"]*)" and the value "([^"]*)" should exist$
+^a cookie with the name "([^"]*)" and the value "([^"]*)" should not exist$
+^a cookie with the name "([^"]*)" should exist$
+^a cookie with the name "([^"]*)" should not exist$
+^a request to "([^"]*)" should have been made$
+^adding the product to the cart should be refused with "([^"]*)"$
+^all cookies are cleared$
+^an email with the subject "([^"]*)" should be sent to "([^"]*)"$
+^browser validation for the form "([^"]*)" is disabled$
+^current url should have the "([^"]*)" parameter with the "([^"]*)" value$
+^current url should have the "([^"]*)" parameter$
+^current url should not have the "([^"]*)" parameter with the "([^"]*)" value$
+^current url should not have the "([^"]*)" parameter$
+^eventually (I |we )*should see "([^"]*)"(?: within (\d+) seconds?)?$
+^every ARIA reference should resolve$
+^every ARIA role should be valid$
+^every button should have an accessible name$
+^every form field should have an accessible label$
+^every image should have an alt attribute$
+^every item in "([^"]*)" should have key "([^"]*)"$
+^every link should have an accessible name$
+^every product of the product list should be in the category "([^"]*)"$
+^local storage is cleared$
+^my account should( not)* have the "([^"]*)" role$
+^no element should have a positive tabindex$
+^no email should be sent to "([^"]*)"$
+^no request to "([^"]*)" should have been made$
+^print API response$
+^print JavaScript errors$
+^print current URL$
+^print last response$
+^print video path$
+^required fields should be consistently marked$
+^session storage is cleared$
+^the "([^"]*)" (button|link|tab|menuitem|checkbox|radio|option) should be visible(?: within (\d+) seconds?)?$
+^the "([^"]*)" admin submenu should( not)* list "([^"]*)"$
+^the "([^"]*)" meta tag should not contain any HTML tags$
+^the "([^"]*)" plugin should( not)* be (installed|active|inactive)$
+^the "([^"]*)" row should contain the following:$
+^the "([^"]*)" setting should( not)* be "([^"]*)"$
+^the "([^"]*)" theme should( not)* be (installed|active)$
+^the (?:(site|comments) feed|feed "([^"]*)") should be a valid (RSS|Atom) feed(?: with at least (\d+) items?)?$
+^the (?:scheduled tasks|cron) should respond(?: without errors)?$
+^the (category|tag) "([^"]*)" should( not)* exist$
+^the (post|page) "([^"]*)" should( not)* be (published|a draft|pending review|scheduled|private|in the trash)$
+^the (post|page) should( not)* be (published|a draft|pending review|scheduled) in the editor$
+^the (post|page)s list should( not)* include "([^"]*)"$
+^the (product|coupon)s list should( not)* include "([^"]*)"$
+^the (site|comments) feed should( not)* list "([^"]*)"$
+^the REST API should( not)* be available$
+^the REST response should contain "([^"]*)"$
+^the REST response status code should be (-?\d+)$
+^the REST route "([^"]*)" should have "([^"]*)" equal to "([^"]*)"$
+^the REST route "([^"]*)" should list at least (\d+) items?$
+^the REST route "([^"]*)" should respond with status (\d+)$
+^the REST route "([^"]*)" should( not)* be refused$
+^the REST route "([^"]*)" should( not)* require authentication$
+^the URL "([^"]*)" is blocked$
+^the URL "([^"]*)" is delayed by (\d+) ?ms$
+^the URL "([^"]*)" returns status (\d+)(?: with body "([^"]*)")?$
+^the URL "([^"]*)" returns the JSON:$
+^the XML attribute "([^"]*)" on element "([^"]*)" should be equal to "([^"]*)"$
+^the XML attribute "([^"]*)" on element "([^"]*)" should contain "([^"]*)"$
+^the XML attribute "([^"]*)" on element "([^"]*)" should exist$
+^the XML attribute "([^"]*)" on element "([^"]*)" should not be equal to "([^"]*)"$
+^the XML attribute "([^"]*)" on element "([^"]*)" should not contain "([^"]*)"$
+^the XML attribute "([^"]*)" on element "([^"]*)" should not exist$
+^the XML element "([^"]*)" should be equal to "([^"]*)"$
+^the XML element "([^"]*)" should contain "([^"]*)"$
+^the XML element "([^"]*)" should exist$
+^the XML element "([^"]*)" should have (-?\d+) element(?:s)?$
+^the XML element "([^"]*)" should not be equal to "([^"]*)"$
+^the XML element "([^"]*)" should not contain "([^"]*)"$
+^the XML element "([^"]*)" should not exist$
+^the XML should not use the namespace "([^"]*)"$
+^the XML should use the namespace "([^"]*)"$
+^the XML sitemap should (?:be served|list "([^"]*)")$
+^the YAML array at "([^"]*)" should contain an item where "([^"]*)" is "([^"]*)"$
+^the YAML array at "([^"]*)" should contain no item where "([^"]*)" is "([^"]*)"$
+^the YAML at "([^"]*)" should have keys "([^"]*)"$
+^the YAML attribute "([^"]*)" on element "([^"]*)" should be equal to "([^"]*)"$
+^the YAML attribute "([^"]*)" on element "([^"]*)" should contain "([^"]*)"$
+^the YAML attribute "([^"]*)" on element "([^"]*)" should exist$
+^the YAML attribute "([^"]*)" on element "([^"]*)" should not be equal to "([^"]*)"$
+^the YAML attribute "([^"]*)" on element "([^"]*)" should not contain "([^"]*)"$
+^the YAML attribute "([^"]*)" on element "([^"]*)" should not exist$
+^the YAML element "([^"]*)" should be equal to "([^"]*)"$
+^the YAML element "([^"]*)" should contain "([^"]*)"$
+^the YAML element "([^"]*)" should exist$
+^the YAML element "([^"]*)" should have (-?\d+) element(?:s)?$
+^the YAML element "([^"]*)" should not be equal to "([^"]*)"$
+^the YAML element "([^"]*)" should not contain "([^"]*)"$
+^the YAML element "([^"]*)" should not exist$
+^the YAML keys at "([^"]*)" should be exactly "([^"]*)"$
+^the YAML response content from the file "([^"]*)"$
+^the YAML response content is the following:$
+^the YAML response should have (-?\d+) document(?:s)?$
+^the YAML should equal the file "([^"]*)" ignoring keys "([^"]*)"$
+^the YAML should have no duplicate keys$
+^the YAML should match JSON Schema "([^"]*)"$
+^the YAML should not use the namespace "([^"]*)"$
+^the YAML should use the namespace "([^"]*)"$
+^the YAML value at "([^"]*)" should be between (-?\d*\.?\d+) and (-?\d*\.?\d+)$
+^the YAML value at "([^"]*)" should be empty$
+^the YAML value at "([^"]*)" should be greater than (-?\d*\.?\d+)$
+^the YAML value at "([^"]*)" should be greater than or equal to (-?\d*\.?\d+)$
+^the YAML value at "([^"]*)" should be less than (-?\d*\.?\d+)$
+^the YAML value at "([^"]*)" should be less than or equal to (-?\d*\.?\d+)$
+^the YAML value at "([^"]*)" should be of type "([^"]*)"$
+^the YAML value at "([^"]*)" should not be empty$
+^the active YAML document is (-?\d+)$
+^the active theme should( not)* be a (block|classic) theme$
+^the admin bar should( not)* list "([^"]*)"$
+^the admin bar should( not)* show the account "([^"]*)"$
+^the admin menu should( not)* list "([^"]*)"$
+^the basic authentication with the username "([^"]*)" and the password "([^"]*)"$
+^the breadcrumbs should be "([^"]*)"$
+^the cart (subtotal|shipping|discount|tax|order total) should be "([^"]*)"$
+^the cart quantity of "([^"]*)" should be (\d+)$
+^the cart should be empty$
+^the cart should( not)* contain "([^"]*)"$
+^the cart should( not)* have the coupon "([^"]*)"$
+^the color field "([^"]*)" should have the value "([^"]*)"$
+^the comment "([^"]*)" should( not)* be (pending|approved|spam|in the trash)$
+^the comment "([^"]*)" should( not)* be awaiting moderation$
+^the cookie "((?:[^"\\]|\\.)*)" is removed$
+^the downloaded file name should be "([^"]*)"$
+^the downloaded file name should contain "([^"]*)"$
+^the downloaded file should be a zip archive containing the following files named:$
+^the downloaded file should be a zip archive containing the following files partially named:$
+^the downloaded file should be a zip archive not containing the following files partially named:$
+^the downloaded file should contain:$
+^the editor should( not)* offer "([^"]*)"$
+^the element "([^"]*)" should appear after the element "([^"]*)"$
+^the element "([^"]*)" should be at the top of the viewport$
+^the element "([^"]*)" should be centered in the viewport$
+^the element "([^"]*)" should be displayed within a viewport with a top offset of (-?\d+) pixels$
+^the element "([^"]*)" should be displayed within a viewport$
+^the element "([^"]*)" should be displayed$
+^the element "([^"]*)" should not be displayed within a viewport with a top offset of (-?\d+) pixels$
+^the element "([^"]*)" should not be displayed within a viewport$
+^the element "([^"]*)" should not be displayed$
+^the element "([^"]*)" should not violate the accessibility rule "([^"]*)"$
+^the element "([^"]*)" should pass an accessibility audit$
+^the element "([^"]*)" with the attribute "([^"]*)" and the value "([^"]*)" should exist$
+^the element "([^"]*)" with the attribute "([^"]*)" and the value "([^"]*)" should not exist$
+^the element "([^"]*)" with the attribute "([^"]*)" and the value containing "([^"]*)" should exist$
+^the element "([^"]*)" with the attribute "([^"]*)" and the value containing "([^"]*)" should not exist$
+^the email with the subject "([^"]*)" to "([^"]*)" should be about the last placed order$
+^the email with the subject "([^"]*)" to "([^"]*)" should contain "([^"]*)"$
+^the field "([^"]*)" should be empty$
+^the field "([^"]*)" should be required$
+^the field "([^"]*)" should exist$
+^the field "([^"]*)" should have "([^"]*)" state$
+^the field "([^"]*)" should not be empty$
+^the field "([^"]*)" should not be required$
+^the field "([^"]*)" should not exist$
+^the focused element should be labeled "([^"]*)"$
+^the focused element should match "([^"]*)"$
+^the following responsive breakpoints:$
+^the heading hierarchy should be valid$
+^the last dialog message should be "([^"]*)"$
+^the last dialog message should contain "([^"]*)"$
+^the last dialog type should be "([^"]*)"$
+^the link "([^"]*)" should be an absolute link$
+^the link "([^"]*)" should not be an absolute link$
+^the link "([^"]*)" with the href "([^"]*)" should exist$
+^the link "([^"]*)" with the href "([^"]*)" should not exist$
+^the link "([^"]*)" with the href "([^"]*)" within the element "([^"]*)" should exist$
+^the link "([^"]*)" with the href "([^"]*)" within the element "([^"]*)" should not exist$
+^the link with the title "([^"]*)" should exist$
+^the link with the title "([^"]*)" should not exist$
+^the media library should( not)* list "([^"]*)"$
+^the meta tag should exist with the following attributes:$
+^the meta tag should not exist with the following attributes:$
+^the mini cart should show (\d+) items?$
+^the mini cart should( not)* contain "([^"]*)"$
+^the modal should contain "([^"]*)"$
+^the modal should not contain "([^"]*)"$
+^the navigation menu should( not)* list "([^"]*)"$
+^the network is offline$
+^the network is online$
+^the option "([^"]*)" should be selected within the select element "([^"]*)"$
+^the option "([^"]*)" should exist within the select element "([^"]*)"$
+^the option "([^"]*)" should not be selected within the select element "([^"]*)"$
+^the option "([^"]*)" should not exist within the select element "([^"]*)"$
+^the order (total|email|payment method) should be "([^"]*)"$
+^the order notes should( not)* include "([^"]*)"$
+^the order should belong to (?:a guest|"([^"]*)")$
+^the order status should( not)* be "([^"]*)"$
+^the orders list should( not)* include the last placed order(?: as "([^"]*)")?$
+^the page language should be "([^"]*)"$
+^the page should declare a language$
+^the page should have a main landmark$
+^the page should have a navigation landmark$
+^the page should have a skip link$
+^the page should have a title$
+^the page should have exactly one h1$
+^the page should have no (critical|serious|moderate|minor) accessibility violations$
+^the page should have no accessibility violations$
+^the page should not violate the accessibility rule "([^"]*)"$
+^the page should pass an accessibility audit excluding "([^"]*)"$
+^the page should pass an accessibility audit(?: at level "(A|AA|AAA)")?$
+^the page should pass the accessibility rules "([^"]*)"$
+^the page should pass the full accessibility check(?: at level "(A|AA|AAA)")?$
+^the page should( not)* advertise the REST API$
+^the page should( not)* link to the site feed$
+^the page should( not)* return (?:HTTP )?status (\d+)$
+^the path should be "([^"]*)"$
+^the path should not be "([^"]*)"$
+^the permalink structure should( not)* be "([^"]*)"$
+^the post should( not)* be in the (category|tag) "([^"]*)"$
+^the product list should be on page (\d+)$
+^the product list should be ordered by (price|name) (ascending|descending)$
+^the product list should have (\d+) products?$
+^the product option "([^"]*)" should be "([^"]*)"$
+^the product price should be "([^"]*)"$
+^the product should( not)* be on sale$
+^the response content from the file "([^"]*)"$
+^the response content is the following:$
+^the response header "([^"]*)" should contain the value "([^"]*)"$
+^the response header "([^"]*)" should not contain the value "([^"]*)"$
+^the response should be in XML format$
+^the response should be in YAML format$
+^the response should contain the header "([^"]*)"$
+^the response should not be in XML format$
+^the response should not be in YAML format$
+^the response should not contain the header "([^"]*)"$
+^the result count should be "([^"]*)"$
+^the search results should( not)* include "([^"]*)"$
+^the site health test "([^"]*)" should (pass|be recommended|be critical)$
+^the system time is "([^"]*)"$
+^the table "([^"]*)" should be empty$
+^the table "([^"]*)" should be sorted by "([^"]*)" in "([^"]*)" order$
+^the table "([^"]*)" should contain the following columns:$
+^the table "([^"]*)" should contain the following rows:$
+^the table "([^"]*)" should have (-?\d+) column(?:s)?$
+^the table "([^"]*)" should have (-?\d+) row(?:s)?$
+^the table "([^"]*)" should not be empty$
+^the text "([^"]*)" should appear after the text "([^"]*)" in the "([^"]*)" element$
+^the text "([^"]*)" should appear after the text "([^"]*)"$
+^there is no (product|coupon) "([^"]*)"$
+^there should be no JavaScript errors$
+^there should be no JavaScript warnings$
+^user zoom should be allowed$

@@ -1,0 +1,98 @@
+{
+  "name": "@webship.co/workspace-woocommerce",
+  "version": "1.0.0",
+  "description": "WooCommerce for Webship Workspace, on top of its WordPress plugin: the builder (`cmd-woocommerce-project.sh`) in every sites folder, a shop set up as a new shop starts with its sample products and the offline payments, the default accounts, the WooCommerce step pack wired into the testing setup next to the WordPress one, and its AI items in their folders: two agents, a skill, a command and two prompts.",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webship/workspace-woocommerce.git"
+  },
+  "files": [
+    "dist/src",
+    "ai",
+    "commands",
+    "features",
+    "scripts",
+    "site",
+    "testing",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build",
+    "test": "npm run build && node --test dist/tests/*.test.js",
+    "lint": "tsc -p tsconfig.json --noEmit"
+  },
+  "workspacePlugin": {
+    "name": "woocommerce",
+    "label": "WooCommerce",
+    "needs": [
+      [
+        "dev",
+        "test",
+        "sandboxes",
+        "demos"
+      ],
+      "wordpress",
+      "ai-agents",
+      "ai-skills",
+      "ai-commands",
+      "ai-prompts"
+    ],
+    "commands": {
+      "types": [
+        "sites"
+      ],
+      "workspaces": [
+        "dev",
+        "test",
+        "sandboxes",
+        "demos"
+      ],
+      "files": [
+        "commands/cmd-woocommerce-project.sh"
+      ]
+    },
+    "scripts": {
+      "functions": [
+        "scripts/functions/fun-woocommerce.sh"
+      ],
+      "args": [
+        "scripts/args/arg-woocommerce.sh"
+      ],
+      "machine": [
+        "testing/shop.feature",
+        "site/header-with-mini-cart.html"
+      ]
+    },
+    "ai": {
+      "agents": [
+        "ai/agents/woocommerce-site-builder.md",
+        "ai/agents/woocommerce-tester.md"
+      ],
+      "skills": [
+        "ai/skills/woocommerce-scenarios"
+      ],
+      "commands": [
+        "ai/commands/woocommerce-test.md"
+      ],
+      "prompts": [
+        "ai/prompts/woocommerce-build-and-test.md",
+        "ai/prompts/woocommerce-order-to-completion.md"
+      ]
+    },
+    "features": [
+      "features/woocommerce.feature"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@webship.co/workspace-plugin-api": "^1.0.11",
+    "typescript": "^5.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
