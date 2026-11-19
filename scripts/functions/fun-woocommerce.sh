@@ -224,8 +224,12 @@ function add_woocommerce_users() {
       --porcelain > /dev/null && echo "   the customer's billing and shipping address: 2 Test Avenue, Los Angeles" ;
   fi
   if [[ " ${users[*]} " == *" shop_manager "* ]] ; then
-    ddev wp eval 'foreach ( array( "new_order", "cancelled_order", "failed_order" ) as $id ) { $o = get_option( "woocommerce_{$id}_settings", array() ); $o = is_array( $o ) ? $o : array(); $o["enabled"] = "yes"; $o["recipient"] = $args[0]; update_option( "woocommerce_{$id}_settings", $o ); }' "${user_shop_manager_mail:-shop_manager@example.com}" > /dev/null \
-      && echo "   the shop's order notifications go to ${user_shop_manager_mail:-shop_manager@example.com}" ;
+    # WP-CLI's eval takes one argument, the code: the address goes in it as base64, so no character of
+    # an address can break the code's quoting.
+    local recipient="${user_shop_manager_mail:-shop_manager@example.com}" encoded ;
+    encoded="$(printf '%s' "${recipient}" | base64 | tr -d '\n')" ;
+    ddev wp eval 'foreach ( array( "new_order", "cancelled_order", "failed_order" ) as $id ) { $o = get_option( "woocommerce_{$id}_settings", array() ); $o = is_array( $o ) ? $o : array(); $o["enabled"] = "yes"; $o["recipient"] = base64_decode( "'"${encoded}"'" ); update_option( "woocommerce_{$id}_settings", $o ); }' > /dev/null \
+      && echo "   the shop's order notifications go to ${recipient}" ;
   fi
   cd ${WORKSPACE_ROOT}/${doc_name};
 }
