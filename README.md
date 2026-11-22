@@ -11,6 +11,7 @@ skill, a command and two prompts — each listed in the workspace folder of its 
 The workspace is container-based (DDEV by default): a shop is a WordPress project like any other, so
 the row menus the core draws (start, stop, launch, backup, clone, remove, tests) work on it
 unchanged.
+A shop is also built on Docker Compose or on a Kubernetes cluster: see [Runtimes](#runtimes).
 
 It is made from the reference platform plugin, `@webship.co/workspace-wordpress`, and builds on it:
 the shop's site is made by that plugin's builder, and the shop's command line is that plugin's WP-CLI
@@ -77,6 +78,7 @@ Everything the builder runs for a shop runs in the shop's own container, through
 | `ai/prompts/woocommerce-build-and-test.md`, `woocommerce-order-to-completion.md` | Two prompts: whole launch commands for a new session |
 | `src/index.ts` | `register(api)`: what the assistant is told about WooCommerce here |
 | `features/woocommerce.feature` | Scenarios for the dashboard's own browser suite |
+| `features/woocommerce-runtimes.feature` | The row, the test users and the pages of a shop built on Docker Compose and on Kubernetes |
 
 The `workspacePlugin` block in `package.json` is the manifest the installer reads.
 
@@ -98,9 +100,10 @@ bash cmd-woocommerce-project.sh myshop --install --add-users --sample-data
 | `--wordpress-version <x>` | The WordPress release (`latest` by default) |
 | `--locale <x>` | The language WordPress is downloaded in |
 | `--php-version <x>` | The PHP of the project container |
+| `--runtime <name>` | The container runtime to build on: `ddev` (the default), `docker`, `kubernetes` or `podman`. See [Runtimes](#runtimes) |
 | `--launch` | Open the shop when it is ready |
 
-The shop answers at `https://myshop.ddev.site/shop/`, its administration at `/wp-admin`, its mail
+On DDEV the shop answers at `https://myshop.ddev.site/shop/`, its administration at `/wp-admin`, its mail
 catcher at `https://myshop.ddev.site:8026`. The WordPress plugin's builder runs `ddev config
 --project-type=wordpress` with the Node.js of the workspace (24) and installs the site; the container
 tool writes the database settings, the builder writes none. A project of the same name is deleted
@@ -109,6 +112,58 @@ first.
 Nothing paid and no account anywhere: the free plugin from the plugin directory, its own sample
 products, the offline payments. The shop is never connected to an account of the vendor, no extension
 of the marketplace is installed, and its "connect your store" prompts are left alone.
+
+### Runtimes
+
+```bash
+bash cmd-woocommerce-project.sh myshop --install --add-users --sample-data                        # DDEV, the default
+bash cmd-woocommerce-project.sh myshop --install --add-users --sample-data --runtime docker       # Docker Compose
+bash cmd-woocommerce-project.sh myshop --install --add-users --sample-data --runtime kubernetes   # a Kubernetes cluster
+```
+
+Without `--runtime` a build takes `container.runtime` of the workspace's `settings.yml`, then DDEV.
+It needs a Webship Workspace with the container runtimes
+([webship/workspace#694](https://github.com/webship/workspace/issues/694)) and the WordPress plugin
+1.0.12 or later, whose builder makes the site there; on an older one the builder says so and stops.
+
+| | DDEV | Docker Compose | Kubernetes | Podman |
+| --- | --- | --- | --- | --- |
+| Build and install, with the default accounts | Yes | Not yet run | Not yet run | Not yet run |
+| The shop page and the account page | Yes | Not yet run | Not yet run | Not yet run |
+| The row in the dashboard, with the shop's test users in its Tests menu | Yes (the WordPress plugin's list there) | Not yet run | Not yet run | Not yet run |
+| The sample products, the shop's `wc` commands, test users added and cancelled | Yes | Not yet run | Not yet run | Not yet run |
+| The testing setup and the suite (`cmd-tools-testing.sh`, `--run`) | Yes | Not yet run | Not yet run | Not yet run |
+| Mail caught by Mailpit, and read by the suite | Yes | Not yet run | Not yet run | Not yet run |
+| Export and import the database, backup, remove | Yes | Not yet run | Not yet run | Not yet run |
+
+"Yes" means it was run on a real shop of that runtime. "Not yet run" means the code is there and covered by the unit tests, and nobody ran it on a real shop yet.
+
+| Runtime | The shop's address | What the project carries |
+| --- | --- | --- |
+| DDEV | `https://myshop.ddev.site` | `.ddev/config.yaml`, the project type `wordpress` |
+| Docker Compose | `http://127.0.0.1:<port>`, printed by the build | `compose.yaml` (the type `wordpress`, and `platform: woocommerce`), `.webship/runtime/Dockerfile` |
+| Kubernetes | `http://<node address>:<port>`, printed by the build | The same, and `k8s/` (the namespace `ws-myshop`) |
+
+What differs on Docker Compose and Kubernetes:
+
+- **The site** is the WordPress plugin's to make there: `wp-config.php` with the database of the
+  project's own stack, WordPress's `.htaccess` for Apache, and an address that follows the request.
+  This plugin writes no database settings on any runtime.
+- **The claim:** the project type is `wordpress` there too, and the builder writes
+  `platform: woocommerce` in the `x-webship:` block of `compose.yaml`. The dashboard then knows a
+  shop: the row's Tests menu adds and cancels the shop's accounts, not the WordPress plugin's list.
+  The WordPress plugin's tool (`cmd-tools-wordpress-cli.sh`) still works on it.
+- **The suite** runs in the Workspace's tests container, against the shop's address.
+- **The shop's mail** goes to the mail catcher of the project's stack, as the WordPress plugin sets
+  it up. The suite's mail steps read the mailbox at `MAIL_URL`; on DDEV that is port 8026 of the
+  project. On Docker Compose and Kubernetes the mailbox has no address outside the project yet, so
+  the scenarios that read a mail do not run there until the Workspace gives it one.
+- **Not there yet:** HTTPS and a host name are DDEV's. Podman runs the same code as Docker Compose
+  and was not run yet.
+
+The same commands work on every runtime: `cmd-tools-wordpress-cli.sh`, `cmd-tools-add-users.sh`,
+`cmd-tools-testing.sh`. The pattern is the reference plugin's:
+[On Docker Compose and Kubernetes](https://github.com/webship/workspace-wordpress/blob/1.0.x/docs/cms-plugin-pattern.md#on-docker-compose-and-kubernetes).
 
 ### The shop's command line
 
@@ -137,7 +192,8 @@ adds the same list (`bash cmd-tools-cancel-users.sh myshop woocommerce` deletes 
 gives them back their role and the customer its addresses. A shop is a project of the DDEV type
 `wordpress`, so the row's Users menu on the dashboard adds the WordPress plugin's list (`editor`,
 `author`, …): the shop's own accounts come with the builder's `--add-users`, the testing setup, and the
-command above.
+command above. On Docker Compose and Kubernetes the builder claims the project for this plugin, and
+the row's Tests menu adds and cancels the shop's accounts.
 
 ### Test a shop
 

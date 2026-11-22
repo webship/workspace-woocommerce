@@ -79,6 +79,9 @@ test('the functions carry the names the core\'s tools look for, and never write 
   assert.match(src, /regenerate_product_lookup_tables/, 'the lookup tables an import leaves empty');
   assert.doesNotMatch(src, /woocommerce\.com\/|wccom|helper_data|jetpack/i, 'no connection to an account of the vendor');
   assert.doesNotMatch(src, /ddev stop -y/, 'ddev stop takes no -y');
+  // The runtimes: the address is the runtime's to say, and the layer chooses the tool.
+  assert.doesNotMatch(src.replace(/^\s*#.*$/gm, '').replace(/echo "https:\/\/\$\{PROJECT_NAME\}\.ddev\.site"/, ''), /ddev\.site/, 'ddev.site only as the answer of a core with no layer');
+  assert.doesNotMatch(src.replace(/^\s*#.*$/gm, ''), /\b(docker|podman|kubectl) |command ddev/, 'only `ddev <verb>`: the layer chooses');
 });
 
 test('each agent is a definition the AI Agents folder can list: named after its file, described, on the fable model', () => {

@@ -9,6 +9,13 @@
 # Everything runs in the project's container (DDEV by default: `ddev wp …`), never on the host. DDEV
 # writes wp-config-ddev.php for the database, so nothing here writes database settings.
 #
+# The runtimes: a shop is built on DDEV, or with --runtime on Docker Compose, Podman or Kubernetes.
+# The commands are the same on each: `ddev <verb>` is DDEV itself on a DDEV project, and on another
+# runtime the core's layer (fun-runtime.sh) gives the verb its meaning there. The WordPress plugin's
+# builder does what the site needs there (wp-config.php and .htaccess of the project's own stack).
+# What is the shop's own is behind woocommerce_runtime: the address (woocommerce_url), and the claim
+# of the plugin on the project (rt_claim), which is how the dashboard knows a shop on a runtime.
+#
 # The shop's CLI is WP-CLI's `wc` commands, through the WordPress plugin's tool:
 #   bash cmd-tools-wordpress-cli.sh <shop> --run "wc product list --user=administrator"
 #
@@ -17,9 +24,10 @@
 #   add_woocommerce_users          create them with WP-CLI     (the same tool, and --add-users of the builder)
 #   cancel_woocommerce_users       delete them                 (cmd-tools-cancel-users.sh <project> woocommerce)
 #   testing_configure_woocommerce  the step pack in the testing stack (cmd-tools-testing.sh <project>)
-# A shop is a project of the DDEV type `wordpress`: the row's Users menu hands the tools the WordPress
-# plugin's list. The shop's own accounts come with the builder's --add-users, with the testing setup,
-# and with `cmd-tools-add-users.sh <project> woocommerce`.
+# A shop is a project of the type `wordpress`. On DDEV the row's Users menu hands the tools the
+# WordPress plugin's list; on another runtime the plugin claims the project, and the row hands them the
+# shop's. The shop's own accounts come with the builder's --add-users, with the testing setup, and with
+# `cmd-tools-add-users.sh <project> woocommerce`.
 
 # The step pack a shop is tested with, and the release line it is required at. It brings the WordPress
 # step pack along; the WordPress plugin's hook adds that one too.
@@ -42,11 +50,39 @@ function set_woocommerce_users() {
   done
 }
 
-# Is this folder a shop? A WordPress project (its DDEV project type) with WooCommerce in its plugins.
+# The runtime of the project in this folder, or of a new build (--runtime, else the workspace's
+# setting, else DDEV). A core without the runtime layer has DDEV only.
+function woocommerce_runtime() {
+  if declare -f runtime_of > /dev/null ; then runtime_of ; else echo 'ddev' ; fi
+}
+
+# The address of the shop in this folder: https://<name>.ddev.site on DDEV, http://127.0.0.1:<port>
+# on Docker Compose and Podman, the node's address and a port on Kubernetes. Asked after `ddev config`.
+function woocommerce_url() {
+  if declare -f rt_url > /dev/null ; then rt_url ; else echo "https://${PROJECT_NAME}.ddev.site" ; fi
+}
+
+# The docroot of a project, from its own container configuration: .ddev/config.yaml, or, on another
+# runtime, the x-webship block of compose.yaml.
+function woocommerce_docroot() {
+  local project_path="$1" ;
+  if [ ! -f "${project_path}/.ddev/config.yaml" ] && [ -f "${project_path}/compose.yaml" ] ; then
+    sed -n '/^x-webship:/,/^[^ x]/s/^  docroot:[[:space:]]*//p' "${project_path}/compose.yaml" | head -1 | sed -E 's/^"?([^"]*)"?[[:space:]]*$/\1/' ;
+  else
+    grep -E '^docroot:' "${project_path}/.ddev/config.yaml" 2>/dev/null | head -1 | sed -E 's/^docroot:[[:space:]]*"?([^"]*)"?[[:space:]]*$/\1/' ;
+  fi
+}
+
+# Is this folder a shop? A WordPress project (its project type, which the core's rt_is_platform reads
+# on every runtime) with WooCommerce in its plugins.
 function woocommerce_is_project() {
   local project_path="$1" docroot ;
-  grep -qE '^type:[[:space:]]*"?wordpress"?[[:space:]]*$' "${project_path}/.ddev/config.yaml" 2>/dev/null || return 1 ;
-  docroot="$(grep -E '^docroot:' "${project_path}/.ddev/config.yaml" 2>/dev/null | head -1 | sed -E 's/^docroot:[[:space:]]*"?([^"]*)"?[[:space:]]*$/\1/')" ;
+  if declare -f rt_is_platform > /dev/null ; then
+    rt_is_platform "${project_path}" wordpress || return 1 ;
+  else
+    grep -qE '^type:[[:space:]]*"?wordpress"?[[:space:]]*$' "${project_path}/.ddev/config.yaml" 2>/dev/null || return 1 ;
+  fi
+  docroot="$(woocommerce_docroot "${project_path}")" ;
   [ -f "${project_path}/${docroot:+${docroot}/}wp-content/plugins/woocommerce/woocommerce.php" ] ;
 }
 
@@ -128,13 +164,25 @@ function woocommerce_import_sample_data() {
 # Build a shop from nothing: the WordPress plugin's builder makes the site, then WooCommerce is added.
 function woocommerce_build() {
   trim_project_name ;
-  local base_url="https://${PROJECT_NAME}.ddev.site" ;
+  local base_url runtime ;
+  runtime="$(woocommerce_runtime)" ;
+  if [ "${RUNTIME:-_none_}" != '_none_' ] && [ "${RUNTIME}" != "${runtime}" ] ; then
+    echo "--runtime ${RUNTIME} needs a Webship Workspace with the container runtimes (webship/workspace#694): update the workspace, or build on DDEV." ;
+    exit 1 ;
+  fi
   local woocommerce_version="${VERSION:-${site_version:-latest}}" ;
   local add_users="${ADD_USERS}" launch="${LAUNCH}" ;
 
   if ! declare -f wordpress_build > /dev/null ; then
     echo "The WooCommerce plugin builds on the WordPress plugin, which is not installed here:" ;
     echo "  bash core/scripts/plugins.sh --install wordpress" ;
+    exit 1 ;
+  fi
+  # On another runtime than DDEV the WordPress plugin's builder writes what the site needs there. One
+  # from before it did (1.0.11 and older) would leave a site that cannot reach its database.
+  if [ "${runtime}" != 'ddev' ] && ! declare -f wordpress_runtime_config > /dev/null ; then
+    echo "A shop on ${runtime} needs the WordPress plugin 1.0.12 or later, which builds there. Update it:" ;
+    echo "  bash core/scripts/plugins.sh --require @webship.co/workspace-wordpress && bash core/scripts/plugins.sh --install wordpress" ;
     exit 1 ;
   fi
 
@@ -147,6 +195,11 @@ function woocommerce_build() {
   ADD_USERS="${add_users}" ; LAUNCH="${launch}" ;
 
   cd "${WORKSPACE_ROOT}/${doc_name}/${PROJECT_NAME}" || exit 1 ;
+  # The address is the runtime's to say, once the project is configured: never a written ddev.site.
+  base_url="$(woocommerce_url)" ;
+  # The project type is WordPress's. On another runtime than DDEV the plugin claims the project, so the
+  # dashboard knows it is a shop and hands its tools the shop's accounts; on DDEV this does nothing.
+  if declare -f rt_claim > /dev/null ; then rt_claim woocommerce || exit 1 ; fi
 
   if [ "${INSTALL}" != 'yes' ] ; then
     # No site yet: WooCommerce goes into the plugins, to activate once WordPress is installed.

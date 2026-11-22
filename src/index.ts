@@ -44,14 +44,15 @@ export function assistantContext(): string {
     '`bash cmd-woocommerce-project.sh <name> --install --add-users --sample-data` from a sites folder (dev, test, sandboxes, demos):',
     'the WordPress plugin\'s builder makes the site, then the free WooCommerce plugin is added and set up as a new shop starts',
     '(the onboarding wizard skipped, open to visitors, the offline payments, a flat rate, the mini cart in the header of the default theme),',
-    'in a container like every other project, at https://<name>.ddev.site; `--sample-data` imports the shop\'s own sample products,',
+    'in a container like every other project: on DDEV by default, at https://<name>.ddev.site, or with `--runtime docker` or `--runtime kubernetes`',
+    'on Docker Compose or a Kubernetes cluster, at the address the build prints; `--sample-data` imports the shop\'s own sample products,',
     '`--add-users` adds the default accounts (administrator, shop_manager, customer). The shop\'s CLI is WP-CLI\'s `wc` commands, through',
     'the WordPress plugin\'s tool: `bash cmd-tools-wordpress-cli.sh <name> --run "wc product list --user=administrator"`.',
     '`bash cmd-tools-testing.sh <name>` sets up webship-js with the WooCommerce step pack and the WordPress pack it extends; `--run` runs the suite.',
     `For WooCommerce work, hand over to the agents ${AGENTS.map((a) => `\`${a}\``).join(' and ')}.`,
     `The plugin also places the skill ${SKILLS.map((a) => `\`${a}\``).join(', ')} (the step pack's phrases, by area) in ai-skills/,`,
     `the command ${AI_COMMANDS.map((a) => `\`/${a} <shop>\``).join(', ')} in ai-commands/ and the prompts ${PROMPTS.map((a) => `\`${a}\``).join(' and ')} in ai-prompts/.`,
-    'Never run php, wp or composer on the host for a project; never connect the shop to an account of the vendor or install a paid extension.',
+    'The same commands work on every runtime. Never run php, wp or composer on the host for a project; never connect the shop to an account of the vendor or install a paid extension.',
   ].join(' ');
 }
 
