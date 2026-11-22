@@ -4,7 +4,8 @@
 
 # Installed by the WooCommerce plugin (plugins.sh --install woocommerce); __WORKSPACE__ is the workspace it was installed into.
 #
-# Build a shop in a container, at https://<name>.ddev.site: the WordPress plugin's builder makes the
+# Build a shop in a container: on DDEV (the default) at https://<name>.ddev.site, and with --runtime
+# docker, podman or kubernetes on that runtime, at the address the build prints. The WordPress plugin's builder makes the
 # site (the latest WordPress, or the one --wordpress-version names), then the free WooCommerce plugin is
 # added from the plugin directory. With --install the shop is set up the way a new shop starts (the
 # onboarding wizard skipped, open to visitors, the offline payments, a flat rate, the mini cart in the

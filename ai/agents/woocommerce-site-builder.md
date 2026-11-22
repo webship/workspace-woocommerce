@@ -42,8 +42,11 @@ bash cmd-woocommerce-project.sh myshop --install --add-users --sample-data
 | `--php-version <x>` | The PHP of the project container. |
 | `--launch` | Opens the shop when it is ready. |
 
-The shop answers at `https://<name>.ddev.site/shop/`, its administration at `/wp-admin`, its mail
-catcher at `https://<name>.ddev.site:8026`. The WordPress plugin's builder makes the site
+On DDEV the shop answers at `https://<name>.ddev.site/shop/`, its administration at `/wp-admin`, its
+mail catcher at `https://<name>.ddev.site:8026`. With `--runtime docker` or `--runtime kubernetes` the
+shop is built on Docker Compose or on a Kubernetes cluster, at the address the build prints
+(`http://127.0.0.1:<port>`, or the node's address and a port): never write a `ddev.site` address for
+such a shop. The WordPress plugin's builder makes the site
 (`ddev config --project-type=wordpress` with the Node.js of the workspace, 24); the container tool
 writes the database settings, the builder writes none. The builder **deletes a project of the same
 name first**: a build is a clean slate, so never point it at a shop somebody still needs. The name

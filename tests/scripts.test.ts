@@ -220,3 +220,137 @@ test('the first feature names no platform in a step, and no password', () => {
   assert.doesNotMatch(feature, /password "/);
   assert.doesNotMatch(feature, /user create|I register/i, 'a suite never creates an account');
 });
+
+// ---- The runtimes: DDEV as before, and Docker Compose, Podman and Kubernetes through the core's layer ----
+
+/**
+ * Run the builder's function in a throwaway workspace with `ddev` replaced by the recorder, the WordPress plugin's
+ * builder by a stand-in that makes the project folder, and the core's layer by stand-ins. `layer` is the runtime
+ * the layer answers with (runtime_of, rt_url, rt_claim), or '' for a core that has no layer yet; `wordpress` is the
+ * WordPress plugin: 'runtimes' for one that builds on every runtime (1.0.12), 'ddev' for one from before it.
+ */
+function build(layer: string, env: Record<string, string> = {}, wordpress = 'runtimes') {
+  const p = project('wordpress');
+  fs.rmSync(p.dir, { recursive: true });
+  const log = path.join(p.root, 'ddev.log');
+  const address = layer === 'kubernetes' ? 'http://172.18.0.2:30080' : 'http://127.0.0.1:41234';
+  const prelude = [
+    'trim_project_name() { :; }',
+    `wordpress_build() { echo "wordpress_build RUNTIME=$RUNTIME VERSION=$VERSION ADD_USERS=$ADD_USERS LAUNCH=$LAUNCH" >> "$DDEV_LOG" ; mkdir -p "${p.dir}" ; }`,
+    wordpress === 'runtimes' ? 'wordpress_runtime_config() { :; }' : '',
+    layer ? `runtime_of() { echo "\${RUNTIME_ANSWER}" ; } ; rt_url() { [ "\${RUNTIME_ANSWER}" == ddev ] && echo "https://\${PROJECT_NAME}.ddev.site" || echo "${address}" ; } ; rt_claim() { echo "rt_claim $* in $(basename "$PWD")" >> "$DDEV_LOG" ; }` : '',
+    'woocommerce_build',
+  ].join('\n');
+  const r = bash(prelude, { WORKSPACE_ROOT: p.root, WORKSPACE_SCRIPTS: p.scripts, doc_name: 'dev', PROJECT_NAME: 'site1', DDEV_LOG: log, account_name: 'webmaster',
+    INSTALL: 'yes', ADD_USERS: 'no', SAMPLE_DATA: 'no', LAUNCH: 'no', VERSION: 'latest', RUNTIME: '_none_', RUNTIME_ANSWER: layer || 'ddev', ...env });
+  const calls = fs.existsSync(log) ? fs.readFileSync(log, 'utf8').trim().split('\n') : [];
+  return { r, calls, dir: p.dir, root: p.root };
+}
+
+test('on DDEV the build is what it was: the same commands with the runtime layer and without it, and the ddev.site address', () => {
+  const without = build('');
+  const withLayer = build('ddev');
+  assert.strictEqual(without.r.status, 0, without.r.stderr + without.r.stdout);
+  assert.strictEqual(withLayer.r.status, 0, withLayer.r.stderr + withLayer.r.stdout);
+  // With the layer the claim is asked for, and it does nothing on a DDEV project (the core's rt_claim).
+  assert.deepStrictEqual(withLayer.calls.filter((c) => !c.startsWith('rt_claim ')), without.calls);
+  assert.deepStrictEqual(without.calls.slice(0, 4), [
+    'wordpress_build RUNTIME=_none_ VERSION=latest ADD_USERS=no LAUNCH=no',
+    'ddev wp rewrite structure /%postname%/',
+    'ddev wp plugin install woocommerce --activate',
+    'ddev wp user list --role=administrator --field=user_login --orderby=ID --order=ASC --number=1',
+  ]);
+  assert.strictEqual(without.calls[without.calls.length - 4], 'ddev wp rewrite flush');
+  for (const b of [without, withLayer]) assert.match(b.r.stdout, /Go to https:\/\/site1\.ddev\.site\/shop\/, and https:\/\/site1\.ddev\.site\/wp-admin as webmaster/);
+});
+
+test('on Docker Compose, Podman and Kubernetes the WordPress builder builds there, the plugin claims the shop, and the address is the runtime\'s', () => {
+  const ddev = build('ddev').calls.filter((c) => !c.startsWith('rt_claim '));
+  for (const [runtime, address] of [['docker', 'http://127.0.0.1:41234'], ['podman', 'http://127.0.0.1:41234'], ['kubernetes', 'http://172.18.0.2:30080']]) {
+    const b = build(runtime, { RUNTIME: runtime });
+    assert.strictEqual(b.r.status, 0, b.r.stderr + b.r.stdout);
+    // The WordPress plugin's builder is handed the runtime, and the claim comes right after it, in the project.
+    assert.deepStrictEqual(b.calls.slice(0, 2), [`wordpress_build RUNTIME=${runtime} VERSION=latest ADD_USERS=no LAUNCH=no`, 'rt_claim woocommerce in site1'], runtime);
+    // The shop is then set up with the very commands of a DDEV build: the database is the WordPress builder's to write.
+    assert.deepStrictEqual(b.calls.slice(2), ddev.slice(1), runtime);
+    assert.match(b.r.stdout, new RegExp(`Go to ${address.replace(/[.]/g, '\\.')}/shop/, and ${address.replace(/[.]/g, '\\.')}/wp-admin as webmaster`));
+    assert.doesNotMatch(b.r.stdout, /ddev\.site/);
+  }
+  // Without --install the shop plugin is put in the plugins, and the address is still the runtime's.
+  const ready = build('docker', { RUNTIME: 'docker', INSTALL: 'no' });
+  assert.match(ready.r.stdout, /Go to http:\/\/127\.0\.0\.1:41234$/m);
+  assert.ok(ready.calls.includes('rt_claim woocommerce in site1'));
+});
+
+test('--runtime on a workspace without the runtime layer is refused, never built on DDEV in silence', () => {
+  const b = build('', { RUNTIME: 'docker' });
+  assert.strictEqual(b.r.status, 1);
+  assert.match(b.r.stdout, /--runtime docker needs a Webship Workspace with the container runtimes/);
+  assert.deepStrictEqual(b.calls, [], 'the WordPress builder was not called: nothing was configured or started');
+  // Asking for DDEV by name is fine there.
+  assert.strictEqual(build('', { RUNTIME: 'ddev' }).r.status, 0);
+});
+
+test('a shop on another runtime needs a WordPress plugin that builds there, and the builder says which', () => {
+  const b = build('docker', { RUNTIME: 'docker' }, 'ddev');
+  assert.strictEqual(b.r.status, 1);
+  assert.match(b.r.stdout, /A shop on docker needs the WordPress plugin 1\.0\.12 or later/);
+  assert.deepStrictEqual(b.calls, [], 'nothing was built');
+  // On DDEV the older WordPress plugin builds as it always did.
+  assert.strictEqual(build('ddev', {}, 'ddev').r.status, 0);
+});
+
+test('the builder takes --runtime, with the runtimes of the core\'s own builders', () => {
+  const args = fs.readFileSync(path.join(PKG, 'scripts', 'args', 'arg-woocommerce.sh'), 'utf8');
+  assert.match(args, /parser\.add_argument\('--runtime',\s+dest='RUNTIME',\s+default="_none_",\s+choices=\['ddev', 'docker', 'podman', 'kubernetes'\],/);
+});
+
+/** A shop of another runtime: compose.yaml with the type and the plugin's claim, and no .ddev folder. */
+function runtimeShop(shop = true) {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'woocommerce-rt-'));
+  const dir = path.join(root, 'dev', 'site1');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'compose.yaml'), 'name: site1\nx-webship:\n  platform: woocommerce\n  runtime: docker\n  stack: php\n  type: wordpress\n  docroot: ""\n  port: 41234\nservices:\n  web:\n    image: x\n');
+  if (shop) {
+    fs.mkdirSync(path.join(dir, 'wp-content', 'plugins', 'woocommerce'), { recursive: true });
+    fs.writeFileSync(path.join(dir, 'wp-content', 'plugins', 'woocommerce', 'woocommerce.php'), '<?php\n');
+  }
+  return { root, dir };
+}
+// The core's rt_is_platform, as far as these tests need it: the type of the x-webship block.
+const LAYER = 'rt_is_platform() { echo "asked $1 $2" >> "${ASKED:-/dev/null}" ; grep -q "^  type: $2$" "$1/compose.yaml" 2>/dev/null || grep -qE "^type: \\"?$2\\"?$" "$1/.ddev/config.yaml" 2>/dev/null ; } ; ';
+
+test('a shop is known on every runtime: the core\'s layer is asked for the project type, the shop plugin is looked for in its docroot', () => {
+  const rt = runtimeShop();
+  const asked = path.join(rt.root, 'asked.log');
+  assert.strictEqual(bash(`${LAYER} woocommerce_is_project ${rt.dir}`, { ASKED: asked }).status, 0);
+  assert.strictEqual(fs.readFileSync(asked, 'utf8'), `asked ${rt.dir} wordpress\n`);
+  assert.strictEqual(bash(`${LAYER} woocommerce_is_project ${runtimeShop(false).dir}`).status, 1, 'a WordPress site without the shop plugin is not a shop');
+  // A DDEV shop, with the layer and without it, as before.
+  assert.strictEqual(bash(`${LAYER} woocommerce_is_project ${project('wordpress').dir}`).status, 0);
+  assert.strictEqual(bash(`${LAYER} woocommerce_is_project ${project('drupal11').dir}`).status, 1);
+  assert.strictEqual(bash(`woocommerce_is_project ${project('wordpress').dir}`).status, 0);
+  // A project of a runtime that no layer reads (an older core) is not one.
+  assert.strictEqual(bash(`woocommerce_is_project ${rt.dir}`).status, 1);
+});
+
+test('the test users work on a shop of a runtime: no .ddev folder is asked for', () => {
+  const rt = runtimeShop();
+  const log = path.join(rt.root, 'ddev.log');
+  const r = bash(`${LAYER} set_woocommerce_users ; add_woocommerce_users`, { WORKSPACE_ROOT: rt.root, doc_name: 'dev', PROJECT_NAME: 'site1', DDEV_LOG: log });
+  assert.strictEqual(r.status, 0, r.stdout + r.stderr);
+  assert.match(fs.readFileSync(log, 'utf8'), /^ddev wp user set-role shop_manager shop_manager$/m);
+});
+
+test('the feature of the runtimes drives a shop the plugin claims, and names no platform in a step', () => {
+  const feature = fs.readFileSync(path.join(PKG, 'features', 'woocommerce-runtimes.feature'), 'utf8');
+  const scenarios = feature.split(/\n(?=  @needs-runtime-)/).slice(1);
+  assert.strictEqual(scenarios.length, 6);
+  for (const s of scenarios) assert.match(s, /^  @needs-runtime-(docker|kubernetes) @needs-platform-woocommerce\n  Scenario: /);
+  const steps = feature.split('\n').filter((l) => /^\s*(Given|When|Then|And|But) /.test(l));
+  for (const s of steps) assert.doesNotMatch(s, /woocommerce|wordpress/i, s);
+  assert.doesNotMatch(feature, /ddev\.site|127\.0\.0\.1/);
+  const manifest = JSON.parse(fs.readFileSync(path.join(PKG, 'package.json'), 'utf8')).workspacePlugin;
+  assert.ok(manifest.features.includes('features/woocommerce-runtimes.feature'));
+  assert.match(manifest.featuresSite, /^cmd-woocommerce-project\.sh ci-woocommerce( [A-Za-z0-9._=-]+)* --runtime docker$/);
+});
