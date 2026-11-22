@@ -128,15 +128,15 @@ It needs a Webship Workspace with the container runtimes
 
 | | DDEV | Docker Compose | Kubernetes | Podman |
 | --- | --- | --- | --- | --- |
-| Build and install, with the default accounts | Yes | Not yet run | Not yet run | Not yet run |
-| The shop page and the account page | Yes | Not yet run | Not yet run | Not yet run |
-| The row in the dashboard, with the shop's test users in its Tests menu | Yes (the WordPress plugin's list there) | Not yet run | Not yet run | Not yet run |
-| The sample products, the shop's `wc` commands, test users added and cancelled | Yes | Not yet run | Not yet run | Not yet run |
-| The testing setup and the suite (`cmd-tools-testing.sh`, `--run`) | Yes | Not yet run | Not yet run | Not yet run |
-| Mail caught by Mailpit, and read by the suite | Yes | Not yet run | Not yet run | Not yet run |
-| Export and import the database, backup, remove | Yes | Not yet run | Not yet run | Not yet run |
+| Build and install, with the default accounts and the sample products | Yes | Yes | Yes | The same code as Docker Compose, not yet run |
+| The shop page, the cart, the account page, the administration | Yes | Yes | Yes | Not yet run |
+| The row in the dashboard, with the shop's test users in its Tests menu | Yes (the WordPress plugin's list there) | Yes | Yes | Not yet run |
+| The shop's `wc` commands, test users added and cancelled | Yes | Yes | Yes | Not yet run |
+| The testing setup and the suite, with the pack's examples | Yes | Yes | Yes | Not yet run |
+| Mail caught by Mailpit, and read by the suite | Yes | Yes, with webship/workspace#712 | Yes, with webship/workspace#712 | Not yet run |
+| Export and import the database, backup, remove | Yes | Yes | Yes | Not yet run |
 
-"Yes" means it was run on a real shop of that runtime. "Not yet run" means the code is there and covered by the unit tests, and nobody ran it on a real shop yet.
+"Yes" means it was run on a real shop of that runtime.
 
 | Runtime | The shop's address | What the project carries |
 | --- | --- | --- |
@@ -155,9 +155,10 @@ What differs on Docker Compose and Kubernetes:
   The WordPress plugin's tool (`cmd-tools-wordpress-cli.sh`) still works on it.
 - **The suite** runs in the Workspace's tests container, against the shop's address.
 - **The shop's mail** goes to the mail catcher of the project's stack, as the WordPress plugin sets
-  it up. The suite's mail steps read the mailbox at `MAIL_URL`; on DDEV that is port 8026 of the
-  project. On Docker Compose and Kubernetes the mailbox has no address outside the project yet, so
-  the scenarios that read a mail do not run there until the Workspace gives it one.
+  it up. The suite's mail steps read the mailbox at `MAIL_URL`: on DDEV port 8026 of the project; on
+  Docker Compose and Kubernetes the Workspace's tests container hands the suite the address of the
+  mailbox (webship/workspace#712). On a Workspace without it, the scenarios that read a mail have
+  nothing to read there.
 - **Not there yet:** HTTPS and a host name are DDEV's. Podman runs the same code as Docker Compose
   and was not run yet.
 
