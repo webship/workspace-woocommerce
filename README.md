@@ -261,7 +261,7 @@ npm run lint
 npm test        # the manifest, the builder, the AI items, the functions against a scaffolded project
 ```
 
-CI runs the same on Node.js 20 and 24, parses every shell script, and runs the plugin's
+CI runs the same on Node.js 24 and 26, parses every shell script, and runs the plugin's
 `features/woocommerce.feature` against a dashboard with this plugin (and the WordPress plugin it
 needs) installed (`webship/workspace/.github/workflows/plugin-browser-suite.yml`).
 
